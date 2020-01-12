@@ -1,0 +1,67 @@
+C:\xampp\htdocs\test\helpout\project1
+
+php artisan make:migration create_settings_table --create=settings
+php artisan make:migration create_positions_table --create=positions
+php artisan make:migration create_employees_table --create=employees
+php artisan make:migration create_roles_table --create=roles
+php artisan make:migration create_permissions_table --create=permissions
+php artisan make:migration create_employee_has_roles_table --create=employee_has_roles
+php artisan make:migration create_role_has_permissions_table --create=role_has_permissions
+php artisan make:migration create_customers_table --create=customers
+php artisan make:migration create_item_types_table --create=type_items
+php artisan make:migration create_items_table --create=items
+php artisan make:migration create_item_histories_table --create=item_histories
+php artisan make:migration create_orders_table --create=orders
+php artisan make:migration create_order_has_items_table --create=order_has_items
+php artisan make:migration create_payment_methods_table --create=payment_methods
+php artisan make:migration create_payments_table --create=payments
+
+php artisan make:model Models/Setting
+php artisan make:model Models/Position
+php artisan make:model Models/Employee
+php artisan make:model Models/Role
+php artisan make:model Models/Permission
+php artisan make:model Models/Customer
+php artisan make:model Models/ItemType
+php artisan make:model Models/Item
+php artisan make:model Models/ItemHistory
+php artisan make:model Models/Order
+php artisan make:model Models/PaymentMethod
+php artisan make:model Models/Payment
+
+php artisan make:controller Api/SettingController
+php artisan make:controller Api/PositionController
+php artisan make:controller Api/EmployeeController
+php artisan make:controller Api/RoleController
+php artisan make:controller Api/PermissionController
+php artisan make:controller Api/CustomerController
+php artisan make:controller Api/ItemTypeController
+php artisan make:controller Api/ItemController
+php artisan make:controller Api/ItemHistoryController
+php artisan make:controller Api/OrderController
+php artisan make:controller Api/PaymentMethodController
+php artisan make:controller Api/PaymentController
+
+php artisan make:request Api/PositionRequest
+php artisan make:request Api/EmployeeRequest
+php artisan make:request Api/RoleRequest
+php artisan make:request Api/PermissionRequest
+php artisan make:request Api/CustomerRequest
+php artisan make:request Api/ItemTypeRequest
+php artisan make:request Api/ItemRequest
+php artisan make:request Api/ItemHistoryRequest
+php artisan make:request Api/OrderRequest
+php artisan make:request Api/PaymentMethodRequest
+php artisan make:request Api/PaymentRequest
+
+php artisan make:controller Web/PositionController
+php artisan make:controller Web/EmployeeController
+php artisan make:controller Web/RoleController
+php artisan make:controller Web/PermissionController
+php artisan make:controller Web/CustomerController
+php artisan make:controller Web/ItemTypeController
+php artisan make:controller Web/ItemController
+php artisan make:controller Web/ItemHistoryController
+php artisan make:controller Web/OrderController
+php artisan make:controller Web/PaymentMethodController
+php artisan make:controller Web/PaymentController
