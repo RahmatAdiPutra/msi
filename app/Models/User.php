@@ -2,44 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
     use Notifiable, SoftDeletes;
 
-    // protected $fillable, $hidden, $casts;
-
-    public function __construct()
+    public function __construct(array $attributes = [])
     {
-        $this->setFillable();
+        $this->connection = Setting::get('setup')['app']['models'][$this->getTable()]['connection'];
+        $this->table = Setting::get('setup')['app']['models'][$this->getTable()]['table'];
+        $this->primaryKey = Setting::get('setup')['app']['models'][$this->getTable()]['primaryKey'];
+        $this->keyType = Setting::get('setup')['app']['models'][$this->getTable()]['keyType'];
+        $this->timestamps = Setting::get('setup')['app']['models'][$this->getTable()]['timestamps'];
+        $this->incrementing = Setting::get('setup')['app']['models'][$this->getTable()]['incrementing'];
+        $this->fillable = Setting::get('setup')['app']['models'][$this->getTable()]['fillable'];
+        $this->hidden = Setting::get('setup')['app']['models'][$this->getTable()]['hidden'];
+        $this->casts = Setting::get('setup')['app']['models'][$this->getTable()]['casts'];
+        Model::__construct($attributes);
     }
-    public function setFillable()
-    {
-        $fields = Schema::getColumnListing($this->getTable());
-
-        $this->fillable[] = $fields;
-    }
-
-    // public function __construct()
-    // {
-    //     $this->fillable = Setting::get('tables')['app']['models']['user']['fillable'];
-    //     $this->hidden = Setting::get('tables')['app']['models']['user']['hidden'];
-    //     $this->casts = Setting::get('tables')['app']['models']['user']['casts'];
-
-    //     return parent::__construct();
-    // }
-
-    // protected $fillable = [
-    //     'name', 'email', 'password',
-    // ];
-    // protected $hidden = [
-    //     'password', 'remember_token',
-    // ];
-    // protected $casts = [
-    //     'email_verified_at' => 'datetime',
-    // ];
 }

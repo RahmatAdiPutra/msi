@@ -5,24 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class TestController extends Controller
 {
     public function index(Request $request)
     {
+        Schema::getColumnListing('users');
         $this->seedSetting();
         return $this->seedUser();
     }
 
     public function seedSetting()
     {
-        $tables = [
+        $setup = [
             'app' => [
                 'models' => [
-                    'application' => [
+                    'applications' => [
                         'connection' => 'mysql',
                         'table' => 'applications',
                         'primaryKey' => 'id',
+                        'keyType' => 'int',
                         'timestamps' => true,
                         'incrementing' => true,
                         'hidden' => [],
@@ -71,10 +74,11 @@ class TestController extends Controller
                             'updated_by' => [],
                         ],
                     ],
-                    'company' => [
+                    'companies' => [
                         'connection' => 'mysql',
                         'table' => 'companies',
                         'primaryKey' => 'id',
+                        'keyType' => 'int',
                         'timestamps' => true,
                         'incrementing' => true,
                         'hidden' => [],
@@ -126,10 +130,11 @@ class TestController extends Controller
                             'updated_by' => [],
                         ],
                     ],
-                    'department' => [
+                    'departments' => [
                         'connection' => 'mysql',
                         'table' => 'departments',
                         'primaryKey' => 'id',
+                        'keyType' => 'int',
                         'timestamps' => true,
                         'incrementing' => true,
                         'hidden' => [],
@@ -157,10 +162,11 @@ class TestController extends Controller
                             'updated_by' => [],
                         ],
                     ],
-                    'permission' => [
+                    'permissions' => [
                         'connection' => 'mysql',
                         'table' => 'permissions',
                         'primaryKey' => 'id',
+                        'keyType' => 'int',
                         'timestamps' => true,
                         'incrementing' => true,
                         'hidden' => [],
@@ -185,10 +191,11 @@ class TestController extends Controller
                             'updated_by' => [],
                         ],
                     ],
-                    'role' => [
+                    'roles' => [
                         'connection' => 'mysql',
                         'table' => 'roles',
                         'primaryKey' => 'id',
+                        'keyType' => 'int',
                         'timestamps' => true,
                         'incrementing' => true,
                         'hidden' => [],
@@ -216,10 +223,11 @@ class TestController extends Controller
                             'updated_by' => [],
                         ],
                     ],
-                    'user' => [
+                    'users' => [
                         'connection' => 'mysql',
                         'table' => 'users',
                         'primaryKey' => 'id',
+                        'keyType' => 'int',
                         'timestamps' => true,
                         'incrementing' => true,
                         'hidden' => [
@@ -295,7 +303,7 @@ class TestController extends Controller
             ],
         ];
 
-        Setting::set('tables', $tables);
+        Setting::set('setup', $setup);
     }
 
     protected function seedUser($totalRow = 1)
@@ -319,7 +327,7 @@ class TestController extends Controller
             ]);
         }
 
-        return User::all();
+        return User::latest()->first();
 
         return 'Seed faker employee';
     }
