@@ -1,0 +1,42 @@
+php artisan make:migration create_settings_table --create=settings
+php artisan make:migration create_companies_table --create=companies
+php artisan make:migration create_departments_table --create=departments
+php artisan make:migration create_applications_table --create=applications
+php artisan make:migration create_roles_table --create=roles
+php artisan make:migration create_permissions_table --create=permissions
+php artisan make:migration create_user_has_roles_table --create=user_has_roles
+php artisan make:migration create_role_has_permissions_table --create=role_has_permissions
+
+php artisan make:model Models/User
+php artisan make:model Models/Setting
+php artisan make:model Models/Company
+php artisan make:model Models/Department
+php artisan make:model Models/Application
+php artisan make:model Models/Role
+php artisan make:model Models/Permission
+
+php artisan make:controller Api/UserController
+php artisan make:controller Api/SettingController
+php artisan make:controller Api/CompanyController
+php artisan make:controller Api/DepartmentController
+php artisan make:controller Api/ApplicationController
+php artisan make:controller Api/RoleController
+php artisan make:controller Api/PermissionController
+
+php artisan make:request Api/UserRequest
+php artisan make:request Api/SettingRequest
+php artisan make:request Api/CompanyRequest
+php artisan make:request Api/DepartmentRequest
+php artisan make:request Api/ApplicationRequest
+php artisan make:request Api/RoleRequest
+php artisan make:request Api/PermissionRequest
+
+php artisan make:controller Web/UserController
+php artisan make:controller Web/SettingController
+php artisan make:controller Web/CompanyController
+php artisan make:controller Web/DepartmentController
+php artisan make:controller Web/ApplicationController
+php artisan make:controller Web/RoleController
+php artisan make:controller Web/PermissionController
+
+php artisan make:controller TestController

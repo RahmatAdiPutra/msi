@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::group([
+    'prefix' => 'test',
+    'as' => 'test.',
+],function () {
+    Route::get('/', 'TestController@index')->name('index');
 });
