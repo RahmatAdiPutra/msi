@@ -2,26 +2,63 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes;
+    use Notifiable, SoftDeletes, ModelTrait;
 
-    public function __construct(array $attributes = [])
+    public function setIdAttribute()
     {
-        $this->connection = Setting::get('setup')['app']['models'][$this->getTable()]['connection'];
-        $this->table = Setting::get('setup')['app']['models'][$this->getTable()]['table'];
-        $this->primaryKey = Setting::get('setup')['app']['models'][$this->getTable()]['primaryKey'];
-        $this->keyType = Setting::get('setup')['app']['models'][$this->getTable()]['keyType'];
-        $this->timestamps = Setting::get('setup')['app']['models'][$this->getTable()]['timestamps'];
-        $this->incrementing = Setting::get('setup')['app']['models'][$this->getTable()]['incrementing'];
-        $this->fillable = Setting::get('setup')['app']['models'][$this->getTable()]['fillable'];
-        $this->hidden = Setting::get('setup')['app']['models'][$this->getTable()]['hidden'];
-        $this->casts = Setting::get('setup')['app']['models'][$this->getTable()]['casts'];
-        Model::__construct($attributes);
+        $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
+    }
+
+    public function getOnlineAttribute($value)
+    {
+        return $value ?  $this->setting['online'][$value] : $this->setting['online'][$value];
+    }
+
+    public function getStatusAttribute($value)
+    {
+        return $value ? $this->setting['status'][$value] : $this->setting['status'][$value];
+    }
+
+    public function updatedUsers()
+    {
+        return $this->hasMany(self::class, 'updated_by');
+    }
+
+    public function updatedRoles()
+    {
+        return $this->hasMany(Role::class, 'updated_by');
+    }
+
+    public function updatedPermissions()
+    {
+        return $this->hasMany(Permission::class, 'updated_by');
+    }
+
+    public function updatedApplications()
+    {
+        return $this->hasMany(Application::class, 'updated_by');
+    }
+
+    public function updatedCompanies()
+    {
+        return $this->hasMany(Company::class, 'updated_by');
+    }
+
+    public function updatedDepartments()
+    {
+        return $this->hasMany(Department::class, 'updated_by');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_has_roles', 'user_id', 'role_id')->with('permissions');
     }
 }

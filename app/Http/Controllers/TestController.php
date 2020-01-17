@@ -5,15 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 
 class TestController extends Controller
 {
     public function index(Request $request)
     {
-        Schema::getColumnListing('users');
+        // return Carbon::now()->format('Ymdhms');
         $this->seedSetting();
         return $this->seedUser();
+        Schema::getColumnListing('users');
     }
 
     public function seedSetting()
@@ -30,23 +32,6 @@ class TestController extends Controller
                         'incrementing' => true,
                         'hidden' => [],
                         'casts' => [],
-                        'columns' => [
-                            'id',
-                            'name',
-                            'alias',
-                            'hostname',
-                            'ip',
-                            'port',
-                            'url',
-                            'logo',
-                            'token',
-                            'version',
-                            'description',
-                            'updated_by',
-                            'created_at',
-                            'updated_at',
-                            'deleted_at',
-                        ],
                         'fillable' => [
                             'name',
                             'alias',
@@ -73,6 +58,7 @@ class TestController extends Controller
                             'description' => [],
                             'updated_by' => [],
                         ],
+                        'customKey' => false,
                     ],
                     'companies' => [
                         'connection' => 'mysql',
@@ -83,24 +69,6 @@ class TestController extends Controller
                         'incrementing' => true,
                         'hidden' => [],
                         'casts' => [],
-                        'columns' => [
-                            'id',
-                            'name',
-                            'alias',
-                            'website',
-                            'email',
-                            'phone_number',
-                            'fax',
-                            'logo',
-                            'country',
-                            'city',
-                            'address',
-                            'postal_code',
-                            'updated_by',
-                            'created_at',
-                            'updated_at',
-                            'deleted_at',
-                        ],
                         'fillable' => [
                             'name',
                             'alias',
@@ -129,6 +97,7 @@ class TestController extends Controller
                             'postal_code' => ['required'],
                             'updated_by' => [],
                         ],
+                        'customKey' => false,
                     ],
                     'departments' => [
                         'connection' => 'mysql',
@@ -139,16 +108,6 @@ class TestController extends Controller
                         'incrementing' => true,
                         'hidden' => [],
                         'casts' => [],
-                        'columns' => [
-                            'id',
-                            'company_id',
-                            'name',
-                            'alias',
-                            'updated_by',
-                            'created_at',
-                            'updated_at',
-                            'deleted_at',
-                        ],
                         'fillable' => [
                             'company_id',
                             'name',
@@ -161,6 +120,7 @@ class TestController extends Controller
                             'alias' => [],
                             'updated_by' => [],
                         ],
+                        'customKey' => false,
                     ],
                     'permissions' => [
                         'connection' => 'mysql',
@@ -171,15 +131,6 @@ class TestController extends Controller
                         'incrementing' => true,
                         'hidden' => [],
                         'casts' => [],
-                        'columns' => [
-                            'id',
-                            'application_id',
-                            'name',
-                            'updated_by',
-                            'created_at',
-                            'updated_at',
-                            'deleted_at',
-                        ],
                         'fillable' => [
                             'application_id',
                             'name',
@@ -190,6 +141,7 @@ class TestController extends Controller
                             'name' => ['required'],
                             'updated_by' => [],
                         ],
+                        'customKey' => false,
                     ],
                     'roles' => [
                         'connection' => 'mysql',
@@ -200,16 +152,6 @@ class TestController extends Controller
                         'incrementing' => true,
                         'hidden' => [],
                         'casts' => [],
-                        'columns' => [
-                            'id',
-                            'company_id',
-                            'department_id',
-                            'name',
-                            'updated_by',
-                            'created_at',
-                            'updated_at',
-                            'deleted_at',
-                        ],
                         'fillable' => [
                             'company_id',
                             'department_id',
@@ -222,6 +164,7 @@ class TestController extends Controller
                             'name' => ['required'],
                             'updated_by' => [],
                         ],
+                        'customKey' => false,
                     ],
                     'users' => [
                         'connection' => 'mysql',
@@ -238,31 +181,6 @@ class TestController extends Controller
                             'email_verified_at' => 'datetime',
                             'online' => 'boolean',
                             'status' => 'boolean',
-                        ],
-                        'columns' => [
-                            'id',
-                            'identity_card',
-                            'name',
-                            'gender',
-                            'birthday',
-                            'religion',
-                            'photo',
-                            'country',
-                            'city',
-                            'address',
-                            'postal_code',
-                            'phone_number',
-                            'email',
-                            'email_verified_at',
-                            'token',
-                            'password',
-                            'remember_token',
-                            'online',
-                            'status',
-                            'updated_by',
-                            'created_at',
-                            'updated_at',
-                            'deleted_at',
                         ],
                         'fillable' => [
                             'identity_card',
@@ -297,6 +215,15 @@ class TestController extends Controller
                             'token' => [],
                             'password' => [],
                             'updated_by' => [],
+                        ],
+                        'customKey' => false,
+                        'online' => [
+                            'offline',
+                            'online',
+                        ],
+                        'status' => [
+                            'not active',
+                            'active',
                         ],
                     ],
                 ],

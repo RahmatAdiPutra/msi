@@ -2,21 +2,32 @@
 
 namespace App\Models;
 
+use App\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 class Department extends Model
 {
-    public function __construct(array $attributes = [])
+    use SoftDeletes, ModelTrait;
+
+    public function setIdAttribute()
     {
-        $this->connection = Setting::get('setup')['app']['models'][$this->getTable()]['connection'];
-        $this->table = Setting::get('setup')['app']['models'][$this->getTable()]['table'];
-        $this->primaryKey = Setting::get('setup')['app']['models'][$this->getTable()]['primaryKey'];
-        $this->keyType = Setting::get('setup')['app']['models'][$this->getTable()]['keyType'];
-        $this->timestamps = Setting::get('setup')['app']['models'][$this->getTable()]['timestamps'];
-        $this->incrementing = Setting::get('setup')['app']['models'][$this->getTable()]['incrementing'];
-        $this->fillable = Setting::get('setup')['app']['models'][$this->getTable()]['fillable'];
-        $this->hidden = Setting::get('setup')['app']['models'][$this->getTable()]['hidden'];
-        $this->casts = Setting::get('setup')['app']['models'][$this->getTable()]['casts'];
-        Model::__construct($attributes);
+        $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function roles()
+    {
+        return $this->hasMany(Role::class, 'department_id');
     }
 }
