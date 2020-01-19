@@ -16,7 +16,7 @@ class CreatePermissionsTable extends Migration
         Schema::create('permissions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('application_id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();

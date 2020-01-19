@@ -17,9 +17,14 @@ class User extends Authenticatable
         $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
     }
 
+    public function getPhotoAttribute($value)
+    {
+        return $value ? $value : $this->setting['photo'];
+    }
+
     public function getOnlineAttribute($value)
     {
-        return $value ?  $this->setting['online'][$value] : $this->setting['online'][$value];
+        return $value ? $this->setting['online'][$value] : $this->setting['online'][$value];
     }
 
     public function getStatusAttribute($value)

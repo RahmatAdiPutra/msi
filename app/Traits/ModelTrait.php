@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Setting;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 trait ModelTrait
@@ -11,7 +12,7 @@ trait ModelTrait
 
     public function __construct(array $attributes = [])
     {
-        $this->setting = Setting::get('setup')['app']['models'][$this->getTable()];
+        $this->setting = Setting::get('setup')['app']['models'][Str::singular($this->getTable())];
 
         if ($this->setting['customKey']) {
             $this->setIdAttribute();

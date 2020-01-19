@@ -16,7 +16,7 @@ class CreateApplicationsTable extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('alias')->nullable();
+            $table->string('alias')->unique()->nullable();
             $table->string('hostname')->unique();
             $table->string('ip')->unique();
             $table->string('port')->unique();

@@ -16,6 +16,11 @@ class Company extends Model
         $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
     }
 
+    public function getLogoAttribute($value)
+    {
+        return $value ? $value : $this->setting['logo'];
+    }
+
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');
