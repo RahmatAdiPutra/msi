@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Schema;
 
 class TestController extends Controller
 {
-    protected $setting, $var, $setup, $model, $route, $faker;
+    protected $setting, $var, $setup, $class, $model, $route, $faker;
 
     public function index(Request $request)
     {
@@ -24,14 +24,27 @@ class TestController extends Controller
         $this->faker = \Faker\Factory::create();
 
         $this->setting();
+        $this->getClass();
 
         return $this->test($request);
         return $this->seed($request);
         return $this->default($request);
     }
 
+    public function getClass()
+    {
+        $data[] = $this;
+        $data[] = $this->class;
+        $data[] = class_basename($this);
+        $data[] = Str::pluralStudly(class_basename($this));
+        $data[] = $this->class ?? Str::snake(Str::pluralStudly(class_basename($this)));
+        $data[] = Str::title(Str::before(Str::snake(class_basename($this)), '_'));
+        return $data;
+    }
+
     protected function setting()
     {
+        // setting for application
         $setup = [
             'app' => [
                 'models' => [
@@ -243,28 +256,22 @@ class TestController extends Controller
                     ],
                 ],
             ],
-            'routes' => [ 
+            'routes' => [
                 'api' => [
                     '*',
                     'data',
-                    'show',
-                    'post',
-                    'destroy',
+                    'create',
+                    'read',
+                    'update',
+                    'delete',
                 ],
             ],
+            'namespace' => [
+                'model' => 'App\Models\\'
+            ]
         ];
+        // setting for dummy
         $var = [
-            'gender' => [
-                'Male',
-                'Female',
-            ],
-            'religion' => [
-                'Islam',
-                'Kristen',
-                'Hindu',
-                'Budha',
-                'Konghucu',
-            ],
             'application' => [
                 [
                     'name' => 'Application Management System',
@@ -284,6 +291,17 @@ class TestController extends Controller
                     'name' => 'Mitra Sahabat Informatika',
                     'alias' => 'msi',
                 ],
+            ],
+            'gender' => [
+                'Male',
+                'Female',
+            ],
+            'religion' => [
+                'Islam',
+                'Kristen',
+                'Hindu',
+                'Budha',
+                'Konghucu',
             ],
         ];
 
@@ -359,7 +377,7 @@ class TestController extends Controller
             // $data['models'][$model] = Schema::getColumnListing($plural);
             $data['data'][$model] = $className::latest()->first();
         }
-        
+
         return $data;
     }
 
@@ -390,7 +408,7 @@ class TestController extends Controller
         //test?seed=role&row=5
         //test?seed=rolepermission&row=5
         //test?seed=userrole&row=5
-        
+
         $table = [
             'user' => 50,
             'application' => 5,
@@ -398,8 +416,8 @@ class TestController extends Controller
             'department' => 5,
             'permission' => 5,
             'role' => 5,
-            'rolepermission' => 5,
-            'userrole' => 5,
+            // 'rolepermission' => 5,
+            // 'userrole' => 5,
         ];
 
         foreach ($table as $key => $value) {
@@ -423,7 +441,7 @@ class TestController extends Controller
                 'birthday' => $this->faker->date('Y-m-d'),
                 'religion' => $this->faker->randomElement($this->var['religion']),
                 'photo' => null,
-                'country' => $this->faker->country, 
+                'country' => $this->faker->country,
                 'city' => $this->faker->city,
                 'address' => $this->faker->address,
                 'postal_code' => $this->faker->postcode,
@@ -491,7 +509,7 @@ class TestController extends Controller
                     'phone_number' => $this->faker->phoneNumber,
                     'fax' => $this->faker->tollFreePhoneNumber,
                     'logo' => null,
-                    'country' => $this->faker->country, 
+                    'country' => $this->faker->country,
                     'city' => $this->faker->city,
                     'address' => $this->faker->address,
                     'postal_code' => $this->faker->postcode,
@@ -508,7 +526,7 @@ class TestController extends Controller
                 'phone_number' => $this->faker->phoneNumber,
                 'fax' => $this->faker->tollFreePhoneNumber,
                 'logo' => null,
-                'country' => $this->faker->country, 
+                'country' => $this->faker->country,
                 'city' => $this->faker->city,
                 'address' => $this->faker->address,
                 'postal_code' => $this->faker->postcode,

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\ModelTrait;
+use App\Traits\MsiModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 class Company extends Model
 {
-    use SoftDeletes, ModelTrait;
+    use SoftDeletes, MsiModelTrait;
 
     public function setIdAttribute()
     {

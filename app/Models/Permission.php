@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\ModelTrait;
+use App\Traits\MsiModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 class Permission extends Model
 {
-    use SoftDeletes, ModelTrait;
+    use SoftDeletes, MsiModelTrait;
 
     public function setIdAttribute()
     {
@@ -23,7 +23,7 @@ class Permission extends Model
 
     public function application()
     {
-        return $this->belongsTo(Application::class, 'application_id');
+        return $this->belongsTo(Application::class, 'application_id')->select('id', 'name', 'alias', 'hostname', 'ip', 'port', 'url', 'logo', 'version');
     }
 
     public function roles()

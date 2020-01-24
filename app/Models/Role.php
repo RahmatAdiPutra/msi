@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\ModelTrait;
+use App\Traits\MsiModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 class Role extends Model
 {
-    use SoftDeletes, ModelTrait;
+    use SoftDeletes, MsiModelTrait;
 
     public function setIdAttribute()
     {
@@ -33,7 +33,7 @@ class Role extends Model
 
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, 'role_has_permissions', 'role_id', 'permission_id');
+        return $this->belongsToMany(Permission::class, 'role_has_permissions', 'role_id', 'permission_id')->select('id', 'permissions.application_id', 'name')->with('application')->withPivot('application_id', 'company_id', 'department_id');
     }
 
     public function users()

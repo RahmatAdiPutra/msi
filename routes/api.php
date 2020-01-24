@@ -18,11 +18,23 @@ use Illuminate\Http\Request;
 // });
 
 Route::group([
+    // 'middleware' => [],
     'namespace' => 'Api'
 ],function () {
     Route::group([
         'prefix' => 'setting'
     ],function () {
         Route::get('/data/{setting}', 'SettingController@data');
+    });
+
+    Route::group([
+        'prefix' => 'user',
+        'as' => 'user.'
+    ],function () {
+        Route::get('/data', 'UserController@data')->name('data');
+        Route::post('/', 'UserController@create')->name('create');
+        Route::get('/{id}', 'UserController@read')->name('read');
+        Route::put('/{id}', 'UserController@update')->name('update');
+        Route::delete('/{id}', 'UserController@delete')->name('delete');
     });
 });

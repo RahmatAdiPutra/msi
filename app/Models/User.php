@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\ModelTrait;
+use App\Traits\MsiModelTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes, ModelTrait;
+    use Notifiable, SoftDeletes, MsiModelTrait;
 
     public function setIdAttribute()
     {
@@ -19,17 +19,17 @@ class User extends Authenticatable
 
     public function getPhotoAttribute($value)
     {
-        return $value ? $value : $this->setting['photo'];
+        return $value ? $value : $this->msiSetting['photo'];
     }
 
     public function getOnlineAttribute($value)
     {
-        return $value ? $this->setting['online'][$value] : $this->setting['online'][$value];
+        return $value ? $this->msiSetting['online'][$value] : $this->msiSetting['online'][$value];
     }
 
     public function getStatusAttribute($value)
     {
-        return $value ? $this->setting['status'][$value] : $this->setting['status'][$value];
+        return $value ? $this->msiSetting['status'][$value] : $this->msiSetting['status'][$value];
     }
 
     public function updatedUsers()
@@ -64,6 +64,6 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'user_has_roles', 'user_id', 'role_id')->with('permissions');
+        return $this->belongsToMany(Role::class, 'user_has_roles', 'user_id', 'role_id')->select('id', 'name')->with('permissions')->withPivot('application_id', 'company_id', 'department_id');
     }
 }

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\ModelTrait;
+use App\Traits\MsiModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 class Application extends Model
 {
-    use SoftDeletes, ModelTrait;
+    use SoftDeletes, MsiModelTrait;
 
     public function setIdAttribute()
     {
@@ -18,7 +18,7 @@ class Application extends Model
 
     public function getLogoAttribute($value)
     {
-        return $value ? $value : $this->setting['logo'];
+        return $value ? $value : $this->msiSetting['logo'];
     }
 
     public function updatedBy()
