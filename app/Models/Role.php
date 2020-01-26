@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\MsiModelTrait;
+use App\Traits\MsiModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 class Role extends Model
 {
-    use SoftDeletes, MsiModelTrait;
+    use SoftDeletes, MsiModel;
 
     public function setIdAttribute()
     {

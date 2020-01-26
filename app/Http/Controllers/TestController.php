@@ -268,7 +268,18 @@ class TestController extends Controller
             ],
             'namespace' => [
                 'model' => 'App\Models\\'
-            ]
+            ],
+            'search' => [
+                'clause' => [
+                    'where',
+                    'whereIn',
+                    'whereNotIn',
+                ],
+                'direction' => [
+                    'asc',
+                    'desc',
+                ],
+            ],
         ];
         // setting for dummy
         $var = [

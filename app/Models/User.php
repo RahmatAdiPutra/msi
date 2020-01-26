@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\MsiModelTrait;
+use App\Traits\MsiModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes, MsiModelTrait;
+    use Notifiable, SoftDeletes, MsiModel;
 
     public function setIdAttribute()
     {

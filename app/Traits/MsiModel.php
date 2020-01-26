@@ -6,7 +6,7 @@ use App\Models\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
-trait MsiModelTrait
+trait MsiModel
 {
     protected $msiSetting;
 

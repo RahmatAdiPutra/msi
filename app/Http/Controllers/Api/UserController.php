@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Traits\MsiControllerTrait;
+use App\Traits\MsiController;
+use App\Traits\MsiCrud;
+use App\Traits\MsiData;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    use MsiControllerTrait;
+    use MsiController, MsiData, MsiCrud;
 
     protected function data(Request $request)
     {

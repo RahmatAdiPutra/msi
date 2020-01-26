@@ -33,8 +33,8 @@ Route::group([
     ],function () {
         Route::get('/data', 'UserController@data')->name('data');
         Route::post('/', 'UserController@create')->name('create');
-        Route::get('/{id}', 'UserController@read')->name('read');
-        Route::put('/{id}', 'UserController@update')->name('update');
-        Route::delete('/{id}', 'UserController@delete')->name('delete');
+        Route::get('/{user}', 'UserController@read')->name('read');
+        Route::put('/{user}', 'UserController@update')->name('update');
+        Route::delete('/{user}', 'UserController@delete')->name('delete');
     });
 });
