@@ -14,26 +14,25 @@ trait MsiCrud
             // } else {
             //     $message = 'Customer has been created';
             // }
-
             // $request->save($request->only(array_keys($request->rules())), $request->id);
 
-            return $this->responseSuccess(['message' => 'test']);
+            return $this->msiResponse(['message' => Str::title($this->msiSetup('name')).' has been created']);
         } catch (\Exception $e) {
-            return $this->responseSuccess(['message' => $e->getMessage()]);
+            return $this->msiResponse(['message' => $e->getMessage()], true);
         }
     }
 
     protected function msiRead($request)
     {
         try {
-            $relations = $this->msiValidArray(explode(',', $request->relation), 'msiMethod');
+            $relations = $this->msiValidArray(explode(',', $request->relation), 'msiIsMethod');
             $msiRead = $this->msiClass()->name::with($relations)->find($request->{$this->msiSetup('name')});
             if ($msiRead) {
-                return response($msiRead);
+                return $this->msiResponse($msiRead);
             }
-            return response(['message' => Str::title($this->msiSetup('name')).' not found']);
+            return $this->msiResponse(['message' => Str::title($this->msiSetup('name')).' not found']);
         } catch (\Exception $e) {
-            return response(['message' => $e->getMessage()]);
+            return $this->msiResponse(['message' => $e->getMessage()], true);
         }
     }
 
@@ -44,6 +43,15 @@ trait MsiCrud
 
     protected function msiDelete($request)
     {
-
+        try {
+            $msiDelete = $this->msiClass()->name::find($request->{$this->msiSetup('name')});
+            if ($msiDelete) {
+                $msiDelete->delete();
+                return $this->msiResponse(['message' => Str::title($this->msiSetup('name')).' has been deleted']);
+            }
+            return $this->msiResponse(['message' => Str::title($this->msiSetup('name')).' not found']);
+        } catch (\Exception $e) {
+            return $this->msiResponse(['message' => $e->getMessage()], true);
+        }
     }
 }

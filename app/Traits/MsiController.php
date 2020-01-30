@@ -20,8 +20,8 @@ trait MsiController
     protected function msiSetup($setup)
     {
         $msiSetup = [
-            'namesapce' => $this->msiSetting->get('setup')['namespace']['model'],
             'name' => Str::before(Str::snake(class_basename($this)), '_'),
+            'namesapce' => $this->msiSetting->get('setup')['namespace']['model'],
             'clause' => $this->msiSetting->get('setup')['search']['clause'],
             'direction' => $this->msiSetting->get('setup')['search']['direction'],
         ];
@@ -48,7 +48,9 @@ trait MsiController
 
     protected function msiMethod()
     {
-        return $this->msiClass()->getMethods();
+        return collect($this->msiClass()->getMethods(ReflectionMethod::IS_PUBLIC))->filter(function ($value, $key) {
+            return $value->class == $this->msiClass()->name;
+        })->pluck('name')->toArray();
     }
 
     protected function msiColumn()
@@ -58,7 +60,7 @@ trait MsiController
 
     protected function msiIsMethod($method)
     {
-        return collect($this->msiMethod())->contains('name', $method);
+        return collect($this->msiMethod())->contains($method);
     }
 
     protected function msiIsColumn($column)
@@ -76,14 +78,23 @@ trait MsiController
         return collect($this->msiSetup('direction'))->contains($direction);
     }
 
-    protected function msiValidArray($array, $method)
+    protected function msiValidArray(Array $array, $method)
     {
-        $data = [];
         foreach ($array as $arr) {
             if ($this->{$method}($arr)) {
                 $data[] = $arr;
             }
         }
-        return $data;
+        return isset($data) ? $data : Array();
+    }
+
+    protected function msiResponse($payloads, $error = false)
+    {
+        $response = [
+            'error' => $error,
+            'payloads' => $payloads,
+        ];
+
+        return response($response);
     }
 }
