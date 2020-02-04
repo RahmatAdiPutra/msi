@@ -15,7 +15,7 @@ trait MsiModel
         $this->msiSetting = Setting::get('setup')['app']['models'][Str::singular($this->getTable())];
 
         if ($this->msiSetting['customKey']) {
-            $this->setIdAttribute();
+            $this->msiCustomKey();
         }
 
         $this->connection = $this->msiSetting['connection'];

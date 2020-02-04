@@ -24,27 +24,35 @@ trait MsiData
 
             // search
             if (!empty($search)) {
-                $columns = $this->msiValidArray(explode(',', $column), 'msiIsColumn');
-                if ($this->msiIsSetupClause($clause)) {
-                    foreach ($columns as $column) {
-                        if ($clause == $this->msiDefault('clause')) {
-                            $query->{$clause}($column, 'like', "%$search%");
-                        } else {
-                            $query->{$clause}($column, explode(' ', $search));
+                $columns = $this->msiValidColumn($column);
+                if (!empty($columns)) {
+                    if ($this->msiIsSetupClause($clause)) {
+                        foreach ($columns as $column) {
+                            if ($clause == $this->msiDefault('clause')) {
+                                $query->{$clause}($column, 'like', "%$search%");
+                            } else {
+                                $query->{$clause}($column, explode(' ', $search));
+                            }
+                        }
+                    } else {
+                        foreach ($columns as $column) {
+                            $query->{$this->msiDefault('clause')}($column, 'like', "%$search%");
                         }
                     }
+                } else {
+                    $query->{$this->msiDefault('clause')}($this->msiDefault('column'), 'like', "%$search%");
                 }
             }
 
             // relation
             if (!empty($relation)) {
-                $relations = $this->msiValidArray(explode(',', $relation), 'msiIsMethod');
+                $relations = $this->msiValidRelation($relation);
                 $query->with($relations);
             }
 
             // order
             if (!empty($order)) {
-                $orders = $this->msiValidArray(explode(',', $order), 'msiIsColumn');
+                $orders = $this->msiValidColumn($order);
                 $directions = explode(',', $direction);
                 foreach ($orders as $key => $column) {
                     if (count($orders) == count($directions)) {
@@ -61,16 +69,16 @@ trait MsiData
             }
 
             // page
-            $paginate = $query->paginate($limit)->toArray();
+            $msiResult = $query->paginate($limit)->toArray();
             if (empty($page)) {
-                $paginate['from'] = $start;
-                $paginate['to'] = $limit + ($start - 1);
-                $paginate['data'] = $query->skip($start)->take($limit)->get();
+                $msiResult['from'] = $start;
+                $msiResult['to'] = $limit + ($start - 1);
+                $msiResult['data'] = $query->skip($start)->take($limit)->get();
             }
 
-            return $this->msiResponse($paginate);
+            return $this->msiResponse($this->msiMessage(0), $msiResult);
         } catch (\Exception $e) {
-            return $this->msiResponse(['message' => $e->getMessage()], true);
+            return $this->msiResponse($e->getMessage());
         }
     }
 }

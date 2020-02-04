@@ -11,7 +11,7 @@ class Department extends Model
 {
     use SoftDeletes, MsiModel;
 
-    public function setIdAttribute()
+    public function msiCustomKey()
     {
         $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
     }

@@ -6,15 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Traits\MsiController;
 use App\Traits\MsiCrud;
 use App\Traits\MsiData;
+use App\Traits\MsiRelation;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    use MsiController, MsiData, MsiCrud;
+    use MsiController, MsiData, MsiCrud, MsiRelation;
 
     protected function data(Request $request)
     {
         return $this->msiData($request);
+    }
+
+    protected function relation(Request $request)
+    {
+        return $this->msiRelation($request);
     }
 
     protected function create(Request $request)

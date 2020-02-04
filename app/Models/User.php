@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     use Notifiable, SoftDeletes, MsiModel;
 
-    public function setIdAttribute()
+    public function msiCustomKey()
     {
         $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
     }

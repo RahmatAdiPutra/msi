@@ -32,9 +32,22 @@ Route::group([
         'as' => 'user.'
     ],function () {
         Route::get('/data', 'UserController@data')->name('data');
+        Route::post('/relation', 'UserController@relation')->name('relation');
         Route::post('/', 'UserController@create')->name('create');
         Route::get('/{user}', 'UserController@read')->name('read');
         Route::put('/{user}', 'UserController@update')->name('update');
         Route::delete('/{user}', 'UserController@delete')->name('delete');
+    });
+
+    Route::group([
+        'prefix' => 'role',
+        'as' => 'role.'
+    ],function () {
+        Route::get('/data', 'RoleController@data')->name('data');
+        Route::post('/relation', 'RoleController@relation')->name('relation');
+        Route::post('/', 'RoleController@create')->name('create');
+        Route::get('/{role}', 'RoleController@read')->name('read');
+        Route::put('/{role}', 'RoleController@update')->name('update');
+        Route::delete('/{role}', 'RoleController@delete')->name('delete');
     });
 });

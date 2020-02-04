@@ -2,56 +2,54 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Str;
-
 trait MsiCrud
 {
     protected function msiCreate($request)
     {
         try {
-            // if ($request->id) {
-            //     $message = 'Customer has been updated';
-            // } else {
-            //     $message = 'Customer has been created';
-            // }
-            // $request->save($request->only(array_keys($request->rules())), $request->id);
-
-            return $this->msiResponse(['message' => Str::title($this->msiSetup('name')).' has been created']);
+            $this->msiValidRule($request->only(array_keys($this->msiRule())));
+            $msiResult = $this->msiSave($request->only(array_keys($this->msiRule())), $request->{$this->msiSetup('name')});
+            return $this->msiResponse($this->msiMessage(2), $msiResult);
         } catch (\Exception $e) {
-            return $this->msiResponse(['message' => $e->getMessage()], true);
+            return $this->msiResponse($e->getMessage());
         }
     }
 
     protected function msiRead($request)
     {
         try {
-            $relations = $this->msiValidArray(explode(',', $request->relation), 'msiIsMethod');
-            $msiRead = $this->msiClass()->name::with($relations)->find($request->{$this->msiSetup('name')});
-            if ($msiRead) {
-                return $this->msiResponse($msiRead);
+            $msiResult = $this->msiClass()->name::with($this->msiValidRelation($request->relation))->find($request->{$this->msiSetup('name')});
+            if ($msiResult) {
+                return $this->msiResponse($this->msiMessage(0), $msiResult);
             }
-            return $this->msiResponse(['message' => Str::title($this->msiSetup('name')).' not found']);
+            return $this->msiThrowMessage($this->msiMessage(1));
         } catch (\Exception $e) {
-            return $this->msiResponse(['message' => $e->getMessage()], true);
+            return $this->msiResponse($e->getMessage());
         }
     }
 
     protected function msiUpdate($request)
     {
-
+        try {
+            // $this->msiValidRule($request->only(array_keys($this->msiRule())));
+            $msiResult = $this->msiSave($request->only(array_keys($this->msiRule())), $request->{$this->msiSetup('name')});
+            return $this->msiResponse($this->msiMessage(3), $msiResult);
+        } catch (\Exception $e) {
+            return $this->msiResponse($e->getMessage());
+        }
     }
 
     protected function msiDelete($request)
     {
         try {
-            $msiDelete = $this->msiClass()->name::find($request->{$this->msiSetup('name')});
-            if ($msiDelete) {
-                $msiDelete->delete();
-                return $this->msiResponse(['message' => Str::title($this->msiSetup('name')).' has been deleted']);
+            $msiResult = $this->msiClass()->name::find($request->{$this->msiSetup('name')});
+            if ($msiResult) {
+                $msiResult->delete();
+                return $this->msiResponse($this->msiMessage(4), $msiResult);
             }
-            return $this->msiResponse(['message' => Str::title($this->msiSetup('name')).' not found']);
+            return $this->msiThrowMessage($this->msiMessage(1));
         } catch (\Exception $e) {
-            return $this->msiResponse(['message' => $e->getMessage()], true);
+            return $this->msiResponse($e->getMessage());
         }
     }
 }

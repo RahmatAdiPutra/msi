@@ -228,8 +228,9 @@ class TestController extends Controller
                             'updated_by',
                         ],
                         'rules' => [
-                            'identity_card' => [],
-                            'name' => ['required'],
+                            'identity_card' => ['unique:users'],
+                            'full_name' => ['required'],
+                            'user_name' => ['required', 'unique:users'],
                             'gender' => [],
                             'birthday' => [],
                             'religion' => [],
@@ -239,7 +240,7 @@ class TestController extends Controller
                             'address' => [],
                             'postal_code' => [],
                             'phone_number' => [],
-                            'email' => ['required'],
+                            'email' => ['required', 'email', 'unique:users'],
                             'password' => [],
                             'updated_by' => [],
                         ],
@@ -279,6 +280,13 @@ class TestController extends Controller
                     'asc',
                     'desc',
                 ],
+            ],
+            'message' => [
+                'Succesfully',
+                'Not found',
+                'Data has been created',
+                'Data has been updated',
+                'Data has been deleted',
             ],
         ];
         // setting for dummy

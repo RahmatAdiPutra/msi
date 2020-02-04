@@ -11,14 +11,14 @@ class Role extends Model
 {
     use SoftDeletes, MsiModel;
 
-    public function setIdAttribute()
+    public function msiCustomKey()
     {
         $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
     }
 
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')->select('id', 'user_name');
     }
 
     public function company()
@@ -38,6 +38,6 @@ class Role extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_has_roles', 'role_id', 'user_id');
+        return $this->belongsToMany(User::class, 'user_has_roles', 'role_id', 'user_id')->select('id', 'user_name');
     }
 }
