@@ -19,7 +19,7 @@ class CreateApplicationsTable extends Migration
             $table->string('alias')->unique()->nullable();
             $table->string('hostname')->unique();
             $table->string('ip')->unique();
-            $table->string('port')->unique();
+            $table->string('port')->nullable();
             $table->string('url')->unique();
             $table->string('logo')->nullable();
             $table->string('token')->nullable();

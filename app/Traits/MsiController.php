@@ -26,6 +26,7 @@ trait MsiController
             'namesapce' => $this->msiSetting->get('setup')['namespace']['model'],
             'clause' => $this->msiSetting->get('setup')['search']['clause'],
             'direction' => $this->msiSetting->get('setup')['search']['direction'],
+            'default' => $this->msiSetting->get('setup')['search']['default'],
         ];
 
         return $msiSetup[$setup];
@@ -34,10 +35,10 @@ trait MsiController
     protected function msiDefault($default)
     {
         $msiDefault = [
-            'clause' => $this->msiSetup('clause')[0],
-            'column' => $this->msiColumn()[0],
-            'order' => $this->msiColumn()[count($this->msiColumn()) - 1],
-            'direction' => $this->msiSetup('direction')[1],
+            'column' => $this->msiSetup('model')[$this->msiSetup('name')]['searchColumn'],
+            'order' => $this->msiSetup('model')[$this->msiSetup('name')]['searchOrder'],
+            'clause' => $this->msiSetup('default')['clause'],
+            'direction' => $this->msiSetup('default')['direction'],
         ];
 
         return $msiDefault[$default];
@@ -58,6 +59,13 @@ trait MsiController
         return new ReflectionClass($this->msiSetup('namesapce').Str::title($this->msiSetup('name')));
     }
 
+    protected function msiNewClass()
+    {
+        $classname = $this->msiClass()->name;
+
+        return new $classname();
+    }
+
     protected function msiMethod()
     {
         return collect($this->msiClass()->getMethods(ReflectionMethod::IS_PUBLIC))->filter(function ($value, $key) {
@@ -75,10 +83,44 @@ trait MsiController
         return $this->msiSetup('model')[Str::singular($this->msiSetup('name'))]['rules'];
     }
 
+    protected function msiRuleUpdate($id)
+    {
+        $this->msiFind($id);
+        $unique = "unique:".Str::plural($this->msiSetup('name'));
+
+        foreach ($this->msiRule() as $key => $value) {
+            if (collect($this->msiRule()[$key])->contains($unique)) {
+                foreach ($value as $k => $v) {
+                    if ($v === $unique) {
+                        $value[$k] = $v.",$key,".$id;
+                    }
+                }
+            }
+            $data[$key] = $value;
+        }
+
+        return isset($data) ? $data : Array();
+    }
+
     protected function msiTableRelation($relation)
     {
-        $classname = $this->msiClass()->name;
-        return empty($relation) ? '' : (new $classname())->{$relation}()->getTable();
+        return empty($relation) ? '' : ($this->msiNewClass())->{$relation}()->getTable();
+    }
+
+    protected function msiColumnRelation($tableRelation)
+    {
+        return Schema::getColumnListing($tableRelation);
+    }
+
+    protected function msiRuleRelation($columnRelation)
+    {
+        foreach ($columnRelation as $key => $value) {
+            if (!($value == $this->msiForeignKey())) {
+                $data[$value] = ['required'];
+            }
+        }
+
+        return isset($data) ? $data : Array();
     }
 
     protected function msiIsMethod($method)
@@ -101,11 +143,6 @@ trait MsiController
         return collect($this->msiSetup('direction'))->contains($direction);
     }
 
-    protected function msiColumnRelation($relation)
-    {
-        return Schema::getColumnListing($relation);
-    }
-
     protected function msiValidArray(Array $array, $method)
     {
         foreach ($array as $arr) {
@@ -117,15 +154,6 @@ trait MsiController
         return isset($data) ? $data : Array();
     }
 
-    protected function msiValidRelation($relation, $multiple = true)
-    {
-        if ($multiple) {
-            return $this->msiValidArray(explode(',', $relation), 'msiIsMethod');
-        } else {
-            return $this->msiIsMethod($relation) ? $relation : '';
-        }
-    }
-
     protected function msiValidColumn($column, $multiple = true)
     {
         if ($multiple) {
@@ -135,27 +163,50 @@ trait MsiController
         }
     }
 
+    protected function msiValidRelation($relation, $multiple = true)
+    {
+        if ($multiple) {
+            return $this->msiValidArray(explode(',', $relation), 'msiIsMethod');
+        } else {
+            return $this->msiIsMethod($relation) ? $relation : '';
+        }
+    }
+
     protected function msiValidColumnRelation($relation)
     {
         return $this->msiColumnRelation($this->msiTableRelation($this->msiValidRelation($relation, false)));
     }
 
-    protected function msiValidRule($rule)
+    protected function msiValidRule($column, $rule)
     {
-        $validator = Validator::make($rule, $this->msiRule());
+        if (empty($rule)) {
+            $this->msiThrowMessage('Rule not valid');
+        }
+
+        $validator = Validator::make($column, $rule);
 
         if ($validator->fails()) {
             $this->msiThrowMessage(collect($validator->errors())->flatten()->first());
         }
     }
 
+    protected function msiFind($id)
+    {
+        $msiData = $this->msiClass()->name::find($id);
+
+        if (empty($msiData)) {
+            $this->msiThrowMessage($this->msiMessage(1));
+        }
+
+        return $msiData;
+    }
+
     protected function msiSave($data, $id = null)
     {
         if ($id) {
-            $msiData = $this->msiClass()->name::find($id);
+            $msiData = $this->msiFind($id);
         } else {
-            $classname = $this->msiClass()->name;
-            $msiData = new $classname();
+            $msiData = $this->msiNewClass();
         }
 
         foreach ($data as $field => $value) {
@@ -169,23 +220,19 @@ trait MsiController
 
     protected function msiSync($data, $relation, $id)
     {
-        if (empty($id)) {
-            return false;
-        } else {
-            $msiData = $this->msiClass()->name::find($id);
-            $counter = empty($data) ? 0 : count(collect($data)->first());
+        $msiData = $this->msiFind($id);
+        $counter = count(collect($data)->first());
 
-            for ($i=0; $i < $counter; $i++) {
-                foreach ($data as $dKey => $dVal) {
-                    $tmp[$dKey] = $dVal[$i];
-                }
-                $msiSync[] = isset($tmp) ? $tmp : Array();
+        for ($i=0; $i < $counter; $i++) {
+            foreach ($data as $dKey => $dVal) {
+                $tmp[$dKey] = $dVal[$i];
             }
-
-            $msiSync = isset($msiSync) ? $msiSync : Array();
-            $msiData->{$relation}()->sync($msiSync);
-            return empty($relation) ? 0 : $msiData->load($relation);
+            $msiSync[] = isset($tmp) ? $tmp : Array();
         }
+
+        $msiData->{$relation}()->sync($msiSync);
+
+        return $msiData->load($relation);
     }
 
     protected function msiMessage($message)

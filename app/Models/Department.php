@@ -18,16 +18,16 @@ class Department extends Model
 
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')->select('id', 'user_name');
     }
 
     public function company()
     {
-        return $this->belongsTo(Company::class, 'company_id');
+        return $this->belongsTo(Company::class, 'company_id')->select('id', 'name');
     }
 
     public function roles()
     {
-        return $this->hasMany(Role::class, 'department_id');
+        return $this->hasMany(Role::class, 'department_id')->select('id', 'department_id', 'name');
     }
 }

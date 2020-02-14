@@ -23,11 +23,11 @@ class Company extends Model
 
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')->select('id', 'user_name');
     }
 
     public function departments()
     {
-        return $this->hasMany(Department::class, 'company_id');
+        return $this->hasMany(Department::class, 'company_id')->select('id', 'company_id', 'name');
     }
 }

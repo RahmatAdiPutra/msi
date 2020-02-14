@@ -32,34 +32,39 @@ class User extends Authenticatable
         return $value ? $this->msiSetting['status'][$value] : $this->msiSetting['status'][$value];
     }
 
-    public function updatedUsers()
+    public function updatedBy()
     {
-        return $this->hasMany(self::class, 'updated_by');
-    }
-
-    public function updatedRoles()
-    {
-        return $this->hasMany(Role::class, 'updated_by');
-    }
-
-    public function updatedPermissions()
-    {
-        return $this->hasMany(Permission::class, 'updated_by');
+        return $this->belongsTo(self::class, 'updated_by')->select('id', 'user_name');
     }
 
     public function updatedApplications()
     {
-        return $this->hasMany(Application::class, 'updated_by');
+        return $this->hasMany(Application::class, 'updated_by')->select('id', 'name');
     }
 
     public function updatedCompanies()
     {
-        return $this->hasMany(Company::class, 'updated_by');
+        return $this->hasMany(Company::class, 'updated_by')->select('id', 'name');
     }
 
     public function updatedDepartments()
     {
-        return $this->hasMany(Department::class, 'updated_by');
+        return $this->hasMany(Department::class, 'updated_by')->select('id', 'name');
+    }
+
+    public function updatedUsers()
+    {
+        return $this->hasMany(self::class, 'updated_by')->select('id', 'updated_by', 'user_name');
+    }
+
+    public function updatedRoles()
+    {
+        return $this->hasMany(Role::class, 'updated_by')->select('id', 'name');
+    }
+
+    public function updatedPermissions()
+    {
+        return $this->hasMany(Permission::class, 'updated_by')->select('id', 'name');
     }
 
     public function roles()

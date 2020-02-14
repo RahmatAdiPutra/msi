@@ -23,11 +23,11 @@ class Application extends Model
 
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')->select('id', 'user_name');
     }
 
     public function permissions()
     {
-        return $this->hasMany(Permission::class, 'application_id');
+        return $this->hasMany(Permission::class, 'application_id')->select('id', 'application_id', 'name');
     }
 }

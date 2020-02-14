@@ -18,12 +18,12 @@ class Permission extends Model
 
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')->select('id', 'user_name');
     }
 
     public function application()
     {
-        return $this->belongsTo(Application::class, 'application_id')->select('id', 'name', 'alias', 'hostname', 'ip', 'port', 'url', 'logo', 'version');
+        return $this->belongsTo(Application::class, 'application_id')->select('id', 'name');
     }
 
     public function roles()

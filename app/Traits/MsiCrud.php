@@ -7,8 +7,8 @@ trait MsiCrud
     protected function msiCreate($request)
     {
         try {
-            $this->msiValidRule($request->only(array_keys($this->msiRule())));
-            $msiResult = $this->msiSave($request->only(array_keys($this->msiRule())), $request->{$this->msiSetup('name')});
+            $this->msiValidRule($request->only(array_keys($this->msiRule())), $this->msiRule());
+            $msiResult = $this->msiSave($request->only(array_keys($this->msiRule())));
             return $this->msiResponse($this->msiMessage(2), $msiResult);
         } catch (\Exception $e) {
             return $this->msiResponse($e->getMessage());
@@ -18,11 +18,8 @@ trait MsiCrud
     protected function msiRead($request)
     {
         try {
-            $msiResult = $this->msiClass()->name::with($this->msiValidRelation($request->relation))->find($request->{$this->msiSetup('name')});
-            if ($msiResult) {
-                return $this->msiResponse($this->msiMessage(0), $msiResult);
-            }
-            return $this->msiThrowMessage($this->msiMessage(1));
+            $msiResult = $this->msiFind($request->{$this->msiSetup('name')});
+            return $this->msiResponse($this->msiMessage(0), $msiResult->load($this->msiValidRelation($request->relation)));
         } catch (\Exception $e) {
             return $this->msiResponse($e->getMessage());
         }
@@ -31,7 +28,7 @@ trait MsiCrud
     protected function msiUpdate($request)
     {
         try {
-            // $this->msiValidRule($request->only(array_keys($this->msiRule())));
+            $this->msiValidRule($request->only(array_keys($this->msiRule())), $this->msiRuleUpdate($request->{$this->msiSetup('name')}));
             $msiResult = $this->msiSave($request->only(array_keys($this->msiRule())), $request->{$this->msiSetup('name')});
             return $this->msiResponse($this->msiMessage(3), $msiResult);
         } catch (\Exception $e) {
@@ -42,12 +39,9 @@ trait MsiCrud
     protected function msiDelete($request)
     {
         try {
-            $msiResult = $this->msiClass()->name::find($request->{$this->msiSetup('name')});
-            if ($msiResult) {
-                $msiResult->delete();
-                return $this->msiResponse($this->msiMessage(4), $msiResult);
-            }
-            return $this->msiThrowMessage($this->msiMessage(1));
+            $msiResult = $this->msiFind($request->{$this->msiSetup('name')});
+            $msiResult->delete();
+            return $this->msiResponse($this->msiMessage(4), $msiResult);
         } catch (\Exception $e) {
             return $this->msiResponse($e->getMessage());
         }
