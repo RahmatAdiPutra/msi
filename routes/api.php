@@ -18,13 +18,14 @@ use Illuminate\Http\Request;
 // });
 
 Route::group([
-    // 'middleware' => [],
+    'middleware' => ['msi'],
     'namespace' => 'Api'
 ],function () {
     Route::group([
-        'prefix' => 'setting'
+        'prefix' => 'setting',
+        'as' => 'setting.'
     ],function () {
-        Route::get('/data/{setting}', 'SettingController@data');
+        Route::get('/data/{setting}', 'SettingController@data')->name('data');
     });
 
     Route::group([

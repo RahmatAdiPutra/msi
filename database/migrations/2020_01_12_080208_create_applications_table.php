@@ -22,7 +22,7 @@ class CreateApplicationsTable extends Migration
             $table->string('port')->nullable();
             $table->string('url')->unique();
             $table->string('logo')->nullable();
-            $table->string('token')->nullable();
+            $table->string('app_key')->unique()->nullable();
             $table->string('version')->nullable();
             $table->text('description')->nullable();
             $table->string('updated_by')->nullable();

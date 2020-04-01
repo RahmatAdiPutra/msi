@@ -15,6 +15,8 @@
 //     return view('welcome');
 // });
 
+Auth::routes();
+
 Route::group([
     'prefix' => 'test',
     'as' => 'test.',

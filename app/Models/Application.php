@@ -6,6 +6,8 @@ use App\Traits\MsiModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class Application extends Model
 {
@@ -13,7 +15,8 @@ class Application extends Model
 
     public function msiCustomKey()
     {
-        $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
+        // $this->attributes[$this->primaryKey] = Carbon::now()->format('Ymdhms');
+        $this->attributes['app_key'] = Hash::make(Str::random(40));
     }
 
     public function getLogoAttribute($value)

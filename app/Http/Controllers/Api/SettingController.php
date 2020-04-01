@@ -11,6 +11,6 @@ class SettingController extends Controller
     public function data(Request $request)
     {
         $setting = Setting::get($request->setting);
-        return $this->responseSuccess($setting);
+        return $setting;
     }
 }

@@ -56,7 +56,7 @@ class TestController extends Controller
                         'timestamps' => true,
                         'incrementing' => true,
                         'hidden' => [
-                            'token',
+                            'app_key',
                         ],
                         'casts' => [],
                         'fillable' => [
@@ -83,7 +83,7 @@ class TestController extends Controller
                             'description' => [],
                             'updated_by' => [],
                         ],
-                        'customKey' => false,
+                        'customKey' => true,
                         'searchColumn' => 'name',
                         'searchOrder' => 'updated_at',
                         'logo' => 'http://lorempixel.com/640/480/',
@@ -264,7 +264,7 @@ class TestController extends Controller
                         ],
                         'rules' => [
                             'application_id' => ['required'],
-                            'name' => ['required'],
+                            'name' => ['required', 'unique:permissions'],
                             'updated_by' => [],
                         ],
                         'customKey' => false,
@@ -398,7 +398,9 @@ class TestController extends Controller
     {
         $data = [];
         $data['request'] = $request->all();
-        $data['date-time'] = Carbon::now()->format('Ymdhms');
+        $data['date-time'] = Carbon::now()->timestamp;
+        $data['ip'] = $request->ip();
+        $data['env'] = env('APP_KEY');
 
         // $test = collect(User::with('roles')->find(10)->get())->pluck('roles');
         // $test = collect($test)->flatten()->pluck('permissions')->flatten();

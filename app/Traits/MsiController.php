@@ -180,7 +180,7 @@ trait MsiController
     protected function msiValidRule($column, $rule)
     {
         if (empty($rule)) {
-            $this->msiThrowMessage('Rule not valid');
+            $this->msiThrowMessage(__FUNCTION__);
         }
 
         $validator = Validator::make($column, $rule);
